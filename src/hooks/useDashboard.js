@@ -16,6 +16,7 @@ import {
   shiftAnchorDays,
   shiftAnchorMonths,
   todayKey,
+  todoIncludesDate,
 } from '../lib/todoUtils'
 
 function loadInitialTodos() {
@@ -33,7 +34,8 @@ export default function useDashboard() {
   const [todos, setTodos] = useState([])
   const [apiReady, setApiReady] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
+  const [filter, setFilter] = useState('today')
+  const [listDateKey, setListDateKey] = useState(todayKey)
   const [category, setCategory] = useState(null)
   const [search, setSearch] = useState('')
   const [view, setView] = useState('list')
@@ -87,8 +89,14 @@ export default function useDashboard() {
   const stats = useMemo(() => computeStats(todos), [todos])
 
   const filtered = useMemo(
-    () => getFilteredTodos(todos, { filter, category, search }),
-    [todos, filter, category, search]
+    () =>
+      getFilteredTodos(todos, {
+        filter,
+        category,
+        search,
+        dateKey: filter === 'today' ? listDateKey : undefined,
+      }),
+    [todos, filter, category, search, listDateKey]
   )
 
   const calendarTodos = useMemo(
@@ -180,7 +188,23 @@ export default function useDashboard() {
 
   function setFilterValue(next) {
     setFilter(next)
+    if (next === 'today') setListDateKey(todayKey())
     if (next !== 'all') setCategory(null)
+  }
+
+  function listDatePrev() {
+    setListDateKey((k) => shiftAnchorDays(k, -1))
+    setFilter('today')
+  }
+
+  function listDateNext() {
+    setListDateKey((k) => shiftAnchorDays(k, 1))
+    setFilter('today')
+  }
+
+  function goListToday() {
+    setListDateKey(todayKey())
+    setFilter('today')
   }
 
   function toggleCategory(next) {
@@ -201,23 +225,37 @@ export default function useDashboard() {
 
   const listActive = filtered.filter((t) => !t.completed)
   const completedList = useMemo(() => {
+    if (filter === 'completed') return []
+    const q = search.trim().toLowerCase()
+
+    if (filter === 'today') {
+      let completed = todos.filter((t) => t.completed && todoIncludesDate(t, listDateKey))
+      if (category) completed = completed.filter((t) => t.category === category)
+      if (q) {
+        completed = completed.filter(
+          (t) => t.title.toLowerCase().includes(q) || (t.memo || '').toLowerCase().includes(q)
+        )
+      }
+      return completed
+    }
+
     if (filter !== 'all') return []
     let completed = todos.filter((t) => t.completed)
     if (category) completed = completed.filter((t) => t.category === category)
-    const q = search.trim().toLowerCase()
     if (q) {
       completed = completed.filter(
         (t) => t.title.toLowerCase().includes(q) || (t.memo || '').toLowerCase().includes(q)
       )
     }
     return completed
-  }, [todos, filter, category, search])
+  }, [todos, filter, category, search, listDateKey])
 
   return {
     todos,
     apiReady,
     loading,
     filter,
+    listDateKey,
     category,
     search,
     setSearch,
@@ -237,6 +275,10 @@ export default function useDashboard() {
     calendarTodos,
     API_BASE,
     setFilter: setFilterValue,
+    listDatePrev,
+    listDateNext,
+    goListToday,
+    setListDateKey,
     toggleCategory,
     openModal,
     closeModal,

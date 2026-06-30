@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "seed": "node scripts/seed-todos.mjs"
+    "seed": "node scripts/seed-todos.mjs",
+    "seed:issues": "node scripts/seed-troubleshooting.mjs",
+    "seed:deploy": "node scripts/seed-deploy.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",

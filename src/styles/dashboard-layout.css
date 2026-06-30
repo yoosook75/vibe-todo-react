@@ -10,6 +10,46 @@
   flex-shrink: 0;
 }
 
+.dashboard-list-date-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  background: #f8fafc;
+  color: #475569;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dashboard-list-date-btn:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.dashboard-list-date-input {
+  height: 2rem;
+  min-height: 2rem;
+  max-height: 2rem;
+  box-sizing: border-box;
+  padding: 0 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  color: #334155;
+}
+
+.dashboard-list-date-input::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+}
+
 .dashboard-empty-state {
   display: flex;
   flex-direction: column;

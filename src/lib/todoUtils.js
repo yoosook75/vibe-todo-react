@@ -168,9 +168,10 @@ export function buildApiPayload(data, { completed = false } = {}) {
   }
 }
 
-export function getFilteredTodos(todos, { filter, category, search }) {
+export function getFilteredTodos(todos, { filter, category, search, dateKey }) {
   const q = (search || '').trim().toLowerCase()
   const today = todayKey()
+  const viewDate = dateKey || today
 
   return todos.filter((todo) => {
     const matchSearch =
@@ -183,7 +184,7 @@ export function getFilteredTodos(todos, { filter, category, search }) {
 
     switch (filter) {
       case 'today':
-        return todo.startDate <= today && getTodoEndDate(todo) >= today
+        return todo.startDate <= viewDate && getTodoEndDate(todo) >= viewDate
       case 'upcoming':
         return todo.startDate > today
       case 'important':

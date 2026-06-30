@@ -5,7 +5,7 @@ import TodoModal from './TodoModal'
 import StatsPanel from './StatsPanel'
 import useDashboard from '../../hooks/useDashboard'
 import { getCalendarTitle } from './dashboardUtils'
-import { todayKey } from '../../lib/todoUtils'
+import { formatDayTitle, todayKey } from '../../lib/todoUtils'
 
 export default function Dashboard() {
   const d = useDashboard()
@@ -172,40 +172,94 @@ export default function Dashboard() {
           <div id="main-content-scroll">
             <div className="dashboard-grid">
               <section className="dashboard-primary" aria-label="할 일 목록 및 캘린더">
-                <div className="dashboard-task-toolbar flex items-center justify-between shrink-0">
-                  <h2 className="text-base font-bold text-slate-800">
-                    {d.filter === 'completed' ? '완료된 할 일' : '진행중인 할 일'}
-                  </h2>
-                  <div className="flex bg-slate-100 p-1 rounded-lg shrink-0">
-                    <button
-                      type="button"
-                      className={`px-3 py-1.5 text-xs rounded-md transition-all ${
-                        d.view === 'list'
-                          ? 'font-semibold bg-white shadow-sm text-indigo-600'
-                          : 'font-medium text-slate-500 hover:bg-slate-50'
-                      }`}
-                      onClick={() => d.setView('list')}
-                    >
-                      리스트
-                    </button>
-                    <button
-                      type="button"
-                      className={`px-3 py-1.5 text-xs rounded-md transition-all ${
-                        d.view === 'calendar'
-                          ? 'font-semibold bg-white shadow-sm text-indigo-600'
-                          : 'font-medium text-slate-500 hover:bg-slate-50'
-                      }`}
-                      onClick={() => d.setView('calendar')}
-                    >
-                      캘린더
-                    </button>
+                <div className="dashboard-task-toolbar flex flex-col gap-2 shrink-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-base font-bold text-slate-800 min-w-0 truncate">
+                      {d.filter === 'completed'
+                        ? '완료된 할 일'
+                        : d.filter === 'today'
+                          ? d.listDateKey === todayKey()
+                            ? '오늘 할 일'
+                            : formatDayTitle(d.listDateKey)
+                          : d.filter === 'upcoming'
+                            ? '예정된 할 일'
+                            : d.filter === 'important'
+                              ? '중요한 할 일'
+                              : '진행중인 할 일'}
+                    </h2>
+                    <div className="flex bg-slate-100 p-1 rounded-lg shrink-0">
+                      <button
+                        type="button"
+                        className={`px-3 py-1.5 text-xs rounded-md transition-all ${
+                          d.view === 'list'
+                            ? 'font-semibold bg-white shadow-sm text-indigo-600'
+                            : 'font-medium text-slate-500 hover:bg-slate-50'
+                        }`}
+                        onClick={() => d.setView('list')}
+                      >
+                        리스트
+                      </button>
+                      <button
+                        type="button"
+                        className={`px-3 py-1.5 text-xs rounded-md transition-all ${
+                          d.view === 'calendar'
+                            ? 'font-semibold bg-white shadow-sm text-indigo-600'
+                            : 'font-medium text-slate-500 hover:bg-slate-50'
+                        }`}
+                        onClick={() => d.setView('calendar')}
+                      >
+                        캘린더
+                      </button>
+                    </div>
                   </div>
+
+                  {d.view === 'list' && d.filter === 'today' && (
+                    <div className="dashboard-list-date-nav flex items-center justify-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        className="dashboard-list-date-btn"
+                        onClick={d.listDatePrev}
+                        aria-label="이전 날"
+                      >
+                        <Icon name="chevron_left" className="text-[18px]" />
+                      </button>
+                      <input
+                        type="date"
+                        value={d.listDateKey}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            d.setListDateKey(e.target.value)
+                            d.setFilter('today')
+                          }
+                        }}
+                        className="dashboard-list-date-input"
+                      />
+                      <button
+                        type="button"
+                        className="dashboard-list-date-btn"
+                        onClick={d.listDateNext}
+                        aria-label="다음 날"
+                      >
+                        <Icon name="chevron_right" className="text-[18px]" />
+                      </button>
+                      {d.listDateKey !== todayKey() && (
+                        <button
+                          type="button"
+                          className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 px-2 py-1"
+                          onClick={d.goListToday}
+                        >
+                          오늘
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="dashboard-task-body">
                   {d.view === 'list' ? (
                     <div className="dashboard-list-scroll pr-1">
-                      {d.listActive.length === 0 && !(d.completedList.length > 0 && d.filter === 'all') ? (
+                      {d.listActive.length === 0 &&
+                      !(d.completedList.length > 0 && (d.filter === 'all' || d.filter === 'today')) ? (
                         <div className="dashboard-empty-state">
                           <Icon name="inbox" className="text-4xl mb-2" />
                           <p className="text-sm font-medium">표시할 할 일이 없습니다</p>
@@ -224,7 +278,7 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                      {d.completedList.length > 0 && d.filter === 'all' && (
+                      {(d.completedList.length > 0 && (d.filter === 'all' || d.filter === 'today')) && (
                         <div className="pt-6 mt-4 opacity-70">
                           <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
                             완료된 할 일
