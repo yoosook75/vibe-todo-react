@@ -288,12 +288,6 @@
     font-size: 1.5rem;
   }
 
-  .dashboard-stats-progress .stats-progress-btn {
-    margin-top: 1rem;
-    padding-top: 0.625rem;
-    padding-bottom: 0.625rem;
-  }
-
   .dashboard-stats-cards {
     gap: 0.75rem;
   }

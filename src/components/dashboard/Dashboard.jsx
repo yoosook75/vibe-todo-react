@@ -365,10 +365,6 @@ export default function Dashboard() {
               <StatsPanel
                 stats={d.stats}
                 filter={d.filter}
-                onViewCompleted={() => {
-                  d.setView('list')
-                  d.setFilter('completed')
-                }}
                 onFilter={(f) => {
                   d.setView('list')
                   if (f === 'today') d.goListToday()

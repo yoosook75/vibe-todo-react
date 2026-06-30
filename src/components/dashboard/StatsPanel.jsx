@@ -1,6 +1,6 @@
 import Icon from './Icon'
 
-export default function StatsPanel({ stats, filter, onViewCompleted, onFilter }) {
+export default function StatsPanel({ stats, filter, onFilter }) {
   const { total, completed, pct } = stats.progress
 
   return (
@@ -19,13 +19,6 @@ export default function StatsPanel({ stats, filter, onViewCompleted, onFilter })
             style={{ width: `${pct}%` }}
           />
         </div>
-        <button
-          type="button"
-          className="stats-progress-btn mt-4 lg:mt-6 w-full py-2.5 bg-indigo-500/40 hover:bg-indigo-500/60 border border-indigo-400/30 rounded-xl text-sm font-semibold transition-all"
-          onClick={onViewCompleted}
-        >
-          완료 목록 보기
-        </button>
       </div>
 
       <div className="dashboard-stats-cards grid grid-cols-2 gap-3 lg:gap-4">
