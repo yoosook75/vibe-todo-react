@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://twnas.kr:15000/:path*"
+    }
+  ]
+}

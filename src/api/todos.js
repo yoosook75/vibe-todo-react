@@ -1,5 +1,6 @@
 const API_BASE =
-  import.meta.env.VITE_API_BASE?.replace(/\/$/, '') || 'http://localhost:5000/todos'
+  import.meta.env.VITE_API_BASE?.replace(/\/$/, '') ||
+  (import.meta.env.PROD ? '/api/todos' : 'http://localhost:5000/todos')
 
 async function parseResponse(res) {
   let data = null
