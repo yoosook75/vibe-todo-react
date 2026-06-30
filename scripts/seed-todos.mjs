@@ -13,7 +13,7 @@ function loadApiBase() {
   } catch {
     /* ignore */
   }
-  return 'http://twnas.kr:15000/todos'
+  return 'http://localhost:5000/todos'
 }
 
 const { getTestTodoPayloads } = await import(
