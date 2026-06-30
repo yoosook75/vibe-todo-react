@@ -1,0 +1,363 @@
+/* Dashboard layout — compact (≤1023px) vs desktop (≥1024px) */
+
+.dashboard-primary {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-task-toolbar {
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+
+.dashboard-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  padding: 4rem 1rem;
+  text-align: center;
+  color: #94a3b8;
+  border: 1px dashed #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.dashboard-stats {
+  align-self: start;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --cal-col-min: 128px;
+    --cal-grid-min: calc(7 * var(--cal-col-min));
+  }
+
+  .dashboard-shell {
+    height: 100%;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .dashboard-shell > .flex {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .dashboard-main {
+    min-height: 0;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .dashboard-header {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-inline: max(1rem, env(safe-area-inset-left, 0px)) max(1rem, env(safe-area-inset-right, 0px));
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+
+  .dashboard-header-left {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .dashboard-header-actions {
+    flex-shrink: 0;
+  }
+
+  .dashboard-header-add-btn .material-symbols-outlined {
+    display: block;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  /* Single vertical scroll container below header */
+  #main-content-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+    overflow: visible;
+    min-height: auto;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dashboard-primary {
+    order: 1;
+    flex: none;
+    min-height: auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .dashboard-stats {
+    order: 2;
+    flex: none;
+    overflow: visible;
+    align-self: stretch;
+  }
+
+  .dashboard-task-body {
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+    display: block;
+  }
+
+  .dashboard-list-scroll {
+    overflow: visible;
+    flex: none;
+    min-height: auto;
+  }
+
+  .dashboard-calendar-shell {
+    flex: none;
+    min-height: auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    display: block;
+  }
+
+  .dashboard-calendar-card {
+    overflow: hidden;
+    min-height: auto;
+    min-width: 0;
+    max-width: 100%;
+    flex: none;
+  }
+
+  /* Calendar: horizontal scroll only; content grows vertically with page scroll */
+  #calendar-scroll-wrap {
+    flex: none;
+    min-height: auto;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #calendar-scroll-wrap.cal-scroll-week,
+  #calendar-scroll-wrap.cal-scroll-month,
+  #calendar-scroll-wrap.cal-scroll-day {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  #calendar-scroll-wrap.cal-scroll-timeline {
+    overflow-x: auto;
+    overflow-y: visible;
+    min-height: 320px;
+  }
+
+  #calendar-scroll-inner {
+    height: auto;
+    min-height: auto;
+    flex: none;
+  }
+
+  #calendar-scroll-inner.cal-min-week,
+  #calendar-scroll-inner.cal-min-month,
+  #calendar-scroll-inner.cal-min-day {
+    height: auto;
+    min-height: auto;
+    flex: none;
+  }
+
+  #calendar-scroll-inner.cal-min-timeline {
+    height: auto;
+    min-height: 320px;
+  }
+
+  .cal-week {
+    min-height: 200px;
+  }
+
+  .cal-month-day {
+    min-height: 104px;
+    height: auto;
+    overflow: visible;
+  }
+
+  #calendar-grid.cal-grid-month {
+    display: block;
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .cal-month-weeks {
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .cal-month-week {
+    flex: none;
+    min-height: var(--cal-month-row-min, 120px);
+    grid-template-rows: auto;
+    overflow: visible;
+  }
+
+  #calendar-grid.cal-grid-week {
+    display: block;
+    flex: none;
+    min-height: auto;
+    overflow: hidden;
+  }
+
+  #calendar-grid.cal-grid-week .cal-week-fill {
+    flex: none;
+    min-height: auto;
+    height: auto;
+  }
+
+  .cal-week-track {
+    flex: none;
+    min-height: auto;
+    display: block;
+    min-width: var(--cal-grid-min);
+  }
+
+  /* Compact stats — less vertical footprint */
+  .dashboard-stats-progress {
+    padding: 1rem;
+  }
+
+  .dashboard-stats-progress h3 {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-stats-progress .stats-progress-btn {
+    margin-top: 1rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .dashboard-stats-cards {
+    gap: 0.75rem;
+  }
+
+  .dashboard-stats-cards .stat-card-btn {
+    padding: 0.75rem;
+  }
+
+  .dashboard-stats-cards .stat-card-btn p:last-child {
+    font-size: 1.25rem;
+  }
+
+  .dashboard-stats-tip {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --cal-col-min: 120px;
+    --cal-grid-min: calc(7 * var(--cal-col-min));
+  }
+
+  #main-content-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .dashboard-primary {
+    grid-column: span 8 / span 8;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .dashboard-stats {
+    grid-column: span 4 / span 4;
+  }
+
+  .dashboard-task-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-list-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .dashboard-calendar-shell {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-calendar-card {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #calendar-scroll-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  #calendar-scroll-inner.cal-min-week,
+  #calendar-scroll-inner.cal-min-month {
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  #calendar-scroll-wrap.cal-scroll-timeline {
+    overflow: hidden;
+  }
+
+  #calendar-grid.cal-grid-month,
+  #calendar-grid.cal-grid-inset,
+  #calendar-grid.cal-grid-timeline {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
