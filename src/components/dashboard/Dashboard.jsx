@@ -67,7 +67,8 @@ export default function Dashboard() {
                   d.filter === f.id ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50'
                 }`}
                 onClick={() => {
-                  d.setFilter(f.id)
+                  if (f.id === 'today') d.goListToday()
+                  else d.setFilter(f.id)
                   d.setSidebarOpen(false)
                 }}
               >
@@ -176,7 +177,9 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between gap-2">
                     <h2 className="text-base font-bold text-slate-800 min-w-0 truncate">
                       {d.filter === 'completed'
-                        ? '완료된 할 일'
+                        ? d.listDateKey === todayKey()
+                          ? '오늘 완료된 할 일'
+                          : `${formatDayTitle(d.listDateKey)} 완료`
                         : d.filter === 'today'
                           ? d.listDateKey === todayKey()
                             ? '오늘 할 일'
@@ -213,7 +216,7 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {d.view === 'list' && d.filter === 'today' && (
+                  {d.view === 'list' && (d.filter === 'today' || d.filter === 'completed') && (
                     <div className="dashboard-list-date-nav flex items-center justify-center gap-2 flex-wrap">
                       <button
                         type="button"
@@ -227,10 +230,7 @@ export default function Dashboard() {
                         type="date"
                         value={d.listDateKey}
                         onChange={(e) => {
-                          if (e.target.value) {
-                            d.setListDateKey(e.target.value)
-                            d.setFilter('today')
-                          }
+                          if (e.target.value) d.setListDateKey(e.target.value)
                         }}
                         className="dashboard-list-date-input"
                       />
@@ -371,7 +371,8 @@ export default function Dashboard() {
                 }}
                 onFilter={(f) => {
                   d.setView('list')
-                  d.setFilter(f)
+                  if (f === 'today') d.goListToday()
+                  else d.setFilter(f)
                 }}
               />
             </div>

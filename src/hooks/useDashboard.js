@@ -10,6 +10,7 @@ import {
 import { getMockTodos } from '../data/mockTodos'
 import {
   buildApiPayload,
+  computeDateProgressStats,
   computeStats,
   getFilteredTodos,
   normalizeTodo,
@@ -86,7 +87,11 @@ export default function useDashboard() {
     }
   }, [loadTodos])
 
-  const stats = useMemo(() => computeStats(todos), [todos])
+  const stats = useMemo(() => {
+    const base = computeStats(todos)
+    const progress = computeDateProgressStats(todos, listDateKey)
+    return { ...base, progress }
+  }, [todos, listDateKey])
 
   const filtered = useMemo(
     () =>
@@ -94,7 +99,7 @@ export default function useDashboard() {
         filter,
         category,
         search,
-        dateKey: filter === 'today' ? listDateKey : undefined,
+        dateKey: filter === 'today' || filter === 'completed' ? listDateKey : undefined,
       }),
     [todos, filter, category, search, listDateKey]
   )
@@ -187,19 +192,21 @@ export default function useDashboard() {
   }
 
   function setFilterValue(next) {
-    setFilter(next)
-    if (next === 'today') setListDateKey(todayKey())
+    setFilter((prev) => {
+      if (next === 'today' && prev !== 'today') {
+        setListDateKey(todayKey())
+      }
+      return next
+    })
     if (next !== 'all') setCategory(null)
   }
 
   function listDatePrev() {
     setListDateKey((k) => shiftAnchorDays(k, -1))
-    setFilter('today')
   }
 
   function listDateNext() {
     setListDateKey((k) => shiftAnchorDays(k, 1))
-    setFilter('today')
   }
 
   function goListToday() {

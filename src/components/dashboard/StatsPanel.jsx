@@ -1,20 +1,22 @@
 import Icon from './Icon'
 
 export default function StatsPanel({ stats, filter, onViewCompleted, onFilter }) {
+  const { total, completed, pct } = stats.progress
+
   return (
     <aside className="dashboard-stats space-y-4 lg:space-y-6" aria-label="통계">
       <div className="dashboard-stats-progress bg-indigo-600 rounded-2xl p-4 lg:p-6 text-white shadow-lg shadow-indigo-200/50">
         <p className="text-indigo-200 text-xs font-bold uppercase tracking-wider mb-2">진행률</p>
         <div className="flex items-end justify-between mb-3 lg:mb-4">
-          <h3 className="text-3xl font-bold">{stats.pct}%</h3>
-          <p className="text-sm opacity-90">
-            전체 {stats.total}개 중 {stats.completed}개 완료
+          <h3 className="text-3xl font-bold">{pct}%</h3>
+          <p className="text-sm opacity-90 text-right">
+            {total}개 중 {completed}개 완료
           </p>
         </div>
         <div className="h-2 bg-indigo-500/50 rounded-full overflow-hidden backdrop-blur-sm">
           <div
             className="h-full bg-white rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${stats.pct}%` }}
+            style={{ width: `${pct}%` }}
           />
         </div>
         <button

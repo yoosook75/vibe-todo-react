@@ -200,11 +200,21 @@ export function getFilteredTodos(todos, { filter, category, search, dateKey }) {
         return diff >= 0 && diff <= 3
       }
       case 'completed':
-        return todo.completed
+        if (!todo.completed) return false
+        if (dateKey) return todoIncludesDate(todo, dateKey)
+        return true
       default:
         return !todo.completed
     }
   })
+}
+
+export function computeDateProgressStats(todos, dateKey) {
+  const dayTodos = todos.filter((t) => todoIncludesDate(t, dateKey))
+  const total = dayTodos.length
+  const completed = dayTodos.filter((t) => t.completed).length
+  const pct = total ? Math.round((completed / total) * 100) : 0
+  return { total, completed, pct }
 }
 
 export function computeStats(todos) {
